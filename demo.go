@@ -21,6 +21,10 @@
 // 	Email string `db:"email"`
 // }
 
+// type S struct {
+// 	Name string
+// }
+
 // func connectDB() *sqlx.DB {
 // 	DB, err := sqlx.Connect("mysql", "root:phamhai@tcp(127.0.0.1:3307)/golang-mysql")
 // 	if err != nil {
@@ -62,8 +66,28 @@
 // }
 
 // func UpdatePersonAPI(DB *sqlx.DB, person Person) {
+// 	// demo := Person{}
+// 	err := DB.Get(&person, `UPDATE person SET name=? WHERE id=?`, person.Name, person.ID)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
+
+// func SearchPersonAPI(s S, DB *sqlx.DB) {
+// 	listPerson := []Person{}
+// 	DB.Select(&listPerson, "SELECT * FROM person WHERE name=?", s.Name)
+// 	demo := listPerson[0]
+// 	fmt.Print(demo)
+// }
+
+// type ID struct {
+// 	ID int `db:"id"`
+// }
+
+// func DeletePersonAPI(DB *sqlx.DB, id ID) {
 // 	tx := DB.MustBegin()
-// 	tx.NamedExec("UPDATE person SET Name=? WHERE id=?", person)
+// 	tx.NamedExec("SET SQL_SAFE_UPDATES=0", id)
+// 	tx.NamedExec("DELETE FROM person WHERE id=:id", id)
 // }
 
 // func main() {
@@ -75,8 +99,12 @@
 // 	// s := "hai"
 // 	// search(s, DB)
 // 	// show(DB)
-// 	person := Person{1, "hailong", "hai@gmail.com"}
-// 	UpdatePersonAPI(DB, person)
+// 	// person := Person{3, "hailong", "hai@gmail.com"}
+// 	// UpdatePersonAPI(DB, person)
+// 	id := ID{4}
+// 	DeletePersonAPI(DB, id)
+// 	// s := S{"hai"}
+// 	// SearchPersonAPI(s, DB)
 // 	// data := []Person{
 // 	// 	{1, "hai", "hai@gmail.com"},
 // 	// 	{2, "pham", "hai@gmail.com"},
