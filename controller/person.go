@@ -2,11 +2,13 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
 
 	"github.com/docker-golang-mysql/model"
+	"github.com/docker-golang-mysql/validate"
 )
 
 func GetPerson(w http.ResponseWriter, r *http.Request) {
@@ -17,11 +19,17 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	var person model.Person
-	err := json.NewDecoder(r.Body).Decode(&person)
-	if err != nil {
+
+	if err := json.NewDecoder(r.Body).Decode(&person); err != nil {
 		log.Fatalln(err)
 	}
-	model.CreatePersonAPI(person)
+	if err := validate.ValidateInputPerson(&person); err != nil {
+		fmt.Fprint(w, err)
+	} else {
+		fmt.Fprint(w, "successfully")
+		model.CreatePersonAPI(person)
+	}
+	// fmt.Print(person)
 }
 
 func SearchPerson(w http.ResponseWriter, r *http.Request) {
